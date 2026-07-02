@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fable 5 by Claude — Max Capability Showcase</title>
+<meta name="description" content="A real-world diagnostic showcase of Fable 5 by Claude operating at maximum capability." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080c;
+  --bg-soft:#0e0e15;
+  --surface:rgba(255,255,255,.03);
+  --surface-2:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.14);
+  --text:#eceaf2;
+  --text-dim:#9c99ab;
+  --text-faint:#66647a;
+  --accent:#e8845c;
+  --accent-2:#c96b9e;
+  --accent-3:#7a6ff0;
+  --good:#5ddb9a;
+  --warn:#f2c14e;
+  --bad:#f0645c;
+  --radius:20px;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(232,132,92,.35)}
+
+/* ---------- scroll progress ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
+  z-index:1000;border-radius:0 3px 3px 0;
+  box-shadow:0 0 12px rgba(232,132,92,.6);
+  transition:width .08s linear;
+}
+
+/* ---------- ambient orbs ---------- */
+.orbs{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.5;will-change:transform}
+.orb-1{width:55vmax;height:55vmax;top:-25vmax;left:-15vmax;background:radial-gradient(circle,rgba(232,132,92,.22),transparent 65%);animation:drift1 26s ease-in-out infinite alternate}
+.orb-2{width:45vmax;height:45vmax;bottom:-20vmax;right:-12vmax;background:radial-gradient(circle,rgba(122,111,240,.18),transparent 65%);animation:drift2 32s ease-in-out infinite alternate}
+.orb-3{width:35vmax;height:35vmax;top:40%;left:55%;background:radial-gradient(circle,rgba(201,107,158,.13),transparent 65%);animation:drift3 38s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(8vmax,6vmax) scale(1.1)}}
+@keyframes drift2{to{transform:translate(-7vmax,-8vmax) scale(1.15)}}
+@keyframes drift3{to{transform:translate(-10vmax,5vmax)}}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");}
+
+/* ---------- layout ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+section{padding:clamp(56px,9vw,110px) 0;position:relative}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:clamp(80px,12vw,120px) 0 60px}
+.badge{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:8px 18px;border-radius:100px;
+  border:1px solid var(--border-strong);
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-dim);width:fit-content;
+}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.8)}}
+.hero h1{
+  margin-top:28px;
+  font-size:clamp(2.6rem,7.5vw,5.4rem);
+  font-weight:900;line-height:1.04;letter-spacing:-.03em;
+}
+.hero h1 .grad{
+  background:linear-gradient(120deg,var(--accent) 0%,var(--accent-2) 55%,var(--accent-3) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 200%;animation:gradShift 7s ease infinite;
+}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p.sub{
+  margin-top:24px;max-width:620px;
+  font-size:clamp(1rem,2.2vw,1.2rem);color:var(--text-dim);font-weight:400;
+}
+.hero .cta-row{margin-top:44px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:14px;font-weight:600;font-size:.95rem;
+  text-decoration:none;transition:.25s;cursor:pointer;border:1px solid transparent;
+}
+.btn-primary{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#140905;box-shadow:0 8px 32px -8px rgba(232,132,92,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -8px rgba(232,132,92,.65)}
+.btn-ghost{border-color:var(--border-strong);color:var(--text);background:var(--surface)}
+.btn-ghost:hover{background:var(--surface-2);transform:translateY(-2px)}
+.scroll-hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  color:var(--text-faint);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.scroll-hint::after{
+  content:'';width:1px;height:44px;
+  background:linear-gradient(to bottom,var(--accent),transparent);
+  animation:sink 1.8s ease-in-out infinite;
+}
+@keyframes sink{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- stat strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:56px}
+.stat{
+  padding:20px 22px;border-radius:var(--radius);
+  border:1px solid var(--border);background:var(--surface);
+  backdrop-filter:blur(10px);
+}
+.stat b{display:block;font-size:clamp(1.35rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(120deg,#fff,var(--text-dim));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:.76rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+
+/* ---------- section headers ---------- */
+.kicker{
+  font-size:.76rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:12px;margin-bottom:18px;
+}
+.kicker::before{content:'';width:32px;height:1px;background:var(--accent)}
+h2.title{font-size:clamp(1.7rem,4.5vw,2.6rem);font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:16px}
+p.lede{color:var(--text-dim);max-width:640px;font-size:1.02rem}
+
+/* ---------- cards ---------- */
+.card{
+  border:1px solid var(--border);border-radius:calc(var(--radius) + 6px);
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  backdrop-filter:blur(14px);
+  overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:10px;
+  padding:16px 22px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.025);
+}
+.tl{width:11px;height:11px;border-radius:50%}
+.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+.card-head .label{margin-left:8px;font-family:var(--mono);font-size:.76rem;color:var(--text-faint)}
+.card-body{padding:clamp(20px,4vw,34px)}
+
+/* ---------- prompt ---------- */
+.prompt-text{font-size:1.05rem;color:var(--text);font-weight:500;margin-bottom:8px}
+.prompt-text em{color:var(--text-dim);font-style:normal;font-weight:400}
+details.ctx{margin-top:22px;border:1px solid var(--border);border-radius:16px;background:rgba(0,0,0,.25);overflow:hidden}
+details.ctx summary{
+  cursor:pointer;list-style:none;padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-weight:600;font-size:.92rem;color:var(--text-dim);
+  transition:.2s;user-select:none;
+}
+details.ctx summary:hover{color:var(--text);background:rgba(255,255,255,.03)}
+details.ctx summary::-webkit-details-marker{display:none}
+details.ctx summary .chev{transition:.3s;color:var(--accent);flex-shrink:0}
+details.ctx[open] summary .chev{transform:rotate(180deg)}
+.ctx-scroll{
+  max-height:440px;overflow-y:auto;padding:6px 20px 22px;
+  font-family:var(--mono);font-size:.8rem;line-height:1.75;color:var(--text-dim);
+  white-space:pre-wrap;word-break:break-word;
+  border-top:1px solid var(--border);
+}
+.ctx-scroll::-webkit-scrollbar{width:8px}
+.ctx-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+.ctx-scroll strong{color:var(--accent);font-weight:500}
+
+/* ---------- image ---------- */
+.img-frame{
+  position:relative;border-radius:calc(var(--radius) + 6px);overflow:hidden;
+  border:1px solid var(--border-strong);cursor:zoom-in;
+  background:var(--bg-soft);
+}
+.img-frame::before{
+  content:'';position:absolute;inset:-2px;z-index:-1;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(232,132,92,.5),transparent 40%,transparent 60%,rgba(122,111,240,.45));
+}
+.img-frame img{display:block;width:100%;height:auto;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.img-frame:hover img{transform:scale(1.025)}
+.img-caption{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:36px 22px 16px;
+  background:linear-gradient(to top,rgba(8,8,12,.92),transparent);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-size:.83rem;color:var(--text-dim);
+}
+.img-caption .zoom{font-family:var(--mono);font-size:.72rem;color:var(--accent);white-space:nowrap}
+.lightbox{
+  position:fixed;inset:0;z-index:2000;background:rgba(4,4,8,.94);
+  display:flex;align-items:center;justify-content:center;padding:4vw;
+  opacity:0;pointer-events:none;transition:opacity .3s;cursor:zoom-out;
+  backdrop-filter:blur(8px);
+}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.7)}
+
+/* ---------- response ---------- */
+.resp-wrap{position:relative}
+.resp-wrap::before{
+  content:'';position:absolute;left:-1px;top:0;bottom:0;width:3px;border-radius:3px;
+  background:linear-gradient(to bottom,var(--accent),var(--accent-2),var(--accent-3));
+  opacity:.7;
+}
+.resp{padding-left:clamp(20px,4vw,36px)}
+.resp h3{
+  font-size:clamp(1.3rem,3.2vw,1.75rem);font-weight:800;letter-spacing:-.02em;
+  margin:52px 0 18px;display:flex;align-items:center;gap:14px;
+}
+.resp h3:first-child{margin-top:0}
+.resp h3 .num{
+  flex-shrink:0;width:34px;height:34px;border-radius:10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:700;font-family:var(--mono);
+  background:linear-gradient(135deg,rgba(232,132,92,.2),rgba(122,111,240,.15));
+  border:1px solid rgba(232,132,92,.35);color:var(--accent);
+}
+.resp p{color:var(--text-dim);margin-bottom:16px;font-size:1rem}
+.resp p strong,.resp li strong{color:var(--text);font-weight:700}
+.resp ul,.resp ol{margin:0 0 18px 22px;color:var(--text-dim)}
+.resp li{margin-bottom:12px}
+.resp ol li::marker{color:var(--accent);font-weight:700}
+.resp ul li::marker{color:var(--accent)}
+.hl{
+  background:linear-gradient(120deg,rgba(232,132,92,.16),rgba(201,107,158,.13));
+  border:1px solid rgba(232,132,92,.25);
+  border-radius:2px;padding:1px 6px;color:var(--text);font-weight:600;white-space:nowrap;
+}
+.callout{
+  margin:26px 0;padding:20px 24px;border-radius:16px;font-size:1rem;
+  border:1px solid;position:relative;
+}
+.callout.warn{border-color:rgba(240,100,92,.35);background:rgba(240,100,92,.07);color:var(--text)}
+.callout.good{border-color:rgba(93,219,154,.3);background:rgba(93,219,154,.06);color:var(--text)}
+.callout .co-label{
+  display:block;font-size:.72rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;
+}
+.callout.warn .co-label{color:var(--bad)}
+.callout.good .co-label{color:var(--good)}
+
+/* ---------- verdict pills ---------- */
+.pill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:22px 0 6px}
+.pill{
+  padding:16px 18px;border-radius:14px;border:1px solid var(--border);
+  background:var(--surface);font-size:.9rem;color:var(--text-dim);
+  display:flex;gap:12px;align-items:flex-start;
+}
+.pill .ic{flex-shrink:0;margin-top:2px}
+.pill b{color:var(--text)}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--border);
+  padding:52px 0 64px;text-align:center;color:var(--text-faint);font-size:.85rem;
+}
+footer .mark{
+  font-weight:800;font-size:1.05rem;letter-spacing:-.01em;margin-bottom:10px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ---------- reveal animations ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* Grok-style word blur fade-in */
+.blur-reveal .w{
+  display:inline-block;
+  opacity:0;filter:blur(8px);transform:translateY(6px);
+  transition:opacity .55s ease,filter .55s ease,transform .55s ease;
+  transition-delay:var(--d,0s);
+  will-change:opacity,filter,transform;
+}
+.blur-reveal.in .w{opacity:1;filter:blur(0);transform:none}
+
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr}
+  .resp{padding-left:18px}
+  .btn{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal,.blur-reveal .w{opacity:1!important;filter:none!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+<div class="grain"></div>
+
+<!-- ================= HERO ================= -->
+<header class="hero wrap">
+  <div class="badge reveal"><span class="dot"></span> Capability Showcase · Max Mode</div>
+  <h1 class="reveal">Fable&nbsp;5<br><span class="grad">by Claude.</span></h1>
+  <p class="sub reveal">One image. One wall of raw diagnostic data. Watch a frontier model cross-reference a thermal floorplan against 26 sections of HVAC telemetry — and nail a diagnosis that would've cost thousands to get wrong.</p>
+  <div class="cta-row reveal">
+    <a href="#response" class="btn btn-primary">Read the Response ↓</a>
+    <a href="#prompt" class="btn btn-ghost">See the Prompt</a>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat"><b>1</b><span>Thermal image</span></div>
+    <div class="stat"><b>26</b><span>Data sections</span></div>
+    <div class="stat"><b>~5,000</b><span>Words of context</span></div>
+    <div class="stat"><b>1</b><span>Correct diagnosis</span></div>
+  </div>
+
+  <div class="scroll-hint">Scroll</div>
+</header>
+
+<!-- ================= THE CHALLENGE ================= -->
+<section class="wrap" id="prompt">
+  <div class="kicker reveal">01 · The Challenge</div>
+  <h2 class="title reveal">A real house. A real problem.<br>A brutal amount of context.</h2>
+  <p class="lede reveal" style="margin-bottom:34px">The AC is set to 71°F but the house sits at 76°F on a 100°F Florida day. The model receives a ceiling-temperature floorplan and a dense, unstructured fact dump — measurements, model numbers, contradicting estimates, and gaps — then gets asked three deceptively simple questions.</p>
+
+  <div class="card reveal">
+    <div class="card-head">
+      <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+      <span class="label">prompt.txt — sent to Fable 5 (max)</span>
+    </div>
+    <div class="card-body">
+      <p class="prompt-text">"Please refer to the attached image and the data-context below.</p>
+      <p class="prompt-text"><strong>What is the issue, what is causing it, and what needs to be done to correct it?</strong></p>
+      <p class="prompt-text"><em>The attached image is my home layout/print and includes the approximate average ceiling temperature for each zone. The temperatures are approximate but fairly accurate."</em></p>
+
+      <details class="ctx">
+        <summary>
+          <span>📄 Expand full data-context — 26 sections of raw HVAC / attic / measurement data</span>
+          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="ctx-scroll">
+<strong>HVAC / Attic / Cooling Performance Report</strong>
+
+<strong>1. Purpose of report</strong>
+This report is a factual summary of the cooling-performance situation, house data, HVAC system data, attic insulation data, ductwork observations, measurements, and related context provided in this conversation.
+This report is not giving a diagnosis, theory, recommendation, or opinion. It is only organizing the known information.
+
+<strong>2. Date / season / climate context</strong>
+Current date in this conversation: 07/01/2026. Current season: summer. Location context: Jacksonville / north Florida area. Climate context: hot and humid cooling season. The reported cooling issue occurred on a very hot day. Outdoor condition was described as probably over 100°F, or at least hot enough that it definitely felt over 100°F. Outdoor humidity: 75-80%. The concern is cooling performance, not heating performance.
+
+<strong>3. Main cooling condition reported</strong>
+Thermostat setpoint: 71°F. Indoor temperature at thermostat: about 76°F. Difference between thermostat setting and actual thermostat reading: about 5°F. The AC was not cooling the house down to the 71°F setpoint during the reported hot day. The system was understood to be in cooling mode during this condition.
+
+<strong>4. Conditioned living area</strong>
+Confirmed conditioned living area from the builder schematic: 1,760.46 sq ft. Rounded conditioned living area: 1,760 sq ft. The builder schematic is the most reliable square footage source provided. Only the conditioned living area is relevant to the HVAC cooling discussion. Garage, patio, covered entry/open porch, and other exterior or non-conditioned areas are intentionally excluded from the cooling-load discussion.
+
+<strong>5. Earlier house-size estimates and corrections</strong>
+An earlier rough house-size figure provided was 1,774 sq ft. An earlier possible interior volume estimate was roughly 18,500 to 19,500 cubic ft, but that was not confirmed. A later LiDAR scan produced a first-pass scanned floor area estimate of about 1,636 sq ft. The LiDAR scan also estimated interior volume at about 15,100 cubic ft. The final confirmed conditioned living area is the builder schematic value: 1,760.46 sq ft, rounded to 1,760 sq ft. The 1,774 sq ft figure, the 1,636 sq ft LiDAR scan figure, and the 18,500 to 19,500 cubic ft estimate should be treated as earlier estimates, not the final confirmed conditioned area. Confirmed interior volume: 15,100 cubic ft. Confirmed average interior height: 8.5ft.
+
+<strong>6. Earlier LiDAR scan data</strong>
+LiDAR scan type: first-pass house scan. Overall scanned floor footprint: about 37.3 ft × 55.1 ft. Total scanned floor area: about 1,636 sq ft. Estimated interior volume: about 15,100 cubic ft. The LiDAR square footage was later superseded by the builder schematic. The LiDAR volume was not confirmed as exact.
+
+<strong>7. Builder schematic / floorplan context</strong>
+A builder schematic / printout was provided. The builder schematic confirmed the conditioned living area as 1,760.46 sq ft. The schematic showed the home layout, including conditioned living areas and attached non-conditioned areas. Conditioned areas shown/discussed included bedrooms, bathrooms, master bedroom, master bath, walk-in closet, kitchen, family/living areas, breakfast/dining-related areas, laundry, and other interior living spaces. Attached non-conditioned or exterior areas shown on the printout included garage, patio, and covered/open entry/porch-type areas. Those non-conditioned areas are not included in the cooling-load square footage. The floorplan is generally a single-story residential layout with the attic above the conditioned ceiling plane.
+
+<strong>8. HVAC system age</strong>
+The HVAC system is fairly new. Exact HVAC install information provided: 2024; 2024-04-01. Later wording leaned toward 2024. Approximate system age as of 2026: about 2 to 3 years old, depending on exact installation date.
+
+<strong>9. HVAC system type and equipment</strong>
+System type: split heat pump system. Outdoor condenser: Rheem/Ruud RP14AZ36AJ2NA. Indoor air handler: Rheem/Ruud RH2TZ3617STANNJ. System size: 3 ton. Cooling capacity: 36,000 BTU/hr. Heating capacity: roughly 34,000 BTU/hr, depending on conditions. Efficiency: around 14.3 SEER2. Refrigerant: R-410A. Voltage: 208/230V, single phase. Compressor type: scroll compressor.
+
+<strong>10. HVAC staging and blower setup</strong>
+The heat pump is two-stage capable. Current staging setup: forced to run stage 2 / high stage only. Stage 1 usage: not currently used. The system is effectively operating as high-stage-only cooling every time there is a cooling call. Air handler setup: high-cool airflow. Blower type: ECM / constant-torque motor. Approximate airflow stated: up to about 1,200 CFM. Practical summary provided earlier: this is a 3-ton Rheem/Ruud two-stage heat pump system currently wired/configured to run at full capacity every time cooling is called, with the air handler also running high-cool airflow.
+
+<strong>11. HVAC sizing math from provided data</strong>
+Conditioned living area used for calculation: 1,760 sq ft. Cooling capacity: 36,000 BTU/hr. Square feet per ton: 1,760 ÷ 3 = about 587 sq ft per ton. BTU per square foot: 36,000 ÷ 1,760 = about 20.5 BTU per sq ft. Airflow per ton based on 1,200 CFM: about 400 CFM per ton. These are calculations based only on the provided system size and confirmed conditioned area.
+
+<strong>12. Attic construction / attic type</strong>
+Attic type: vented attic. Roof decking visible in attic photos: OSB roof decking. Framing: wood trusses. Ductwork location: ducts run through the attic. Insulation location: attic floor / ceiling plane above conditioned living space. The attic contains loose-fill/blown-in insulation. The attic also contains some older yellow fiberglass batt/roll insulation. The attic has obstructions including trusses, ductwork, wiring, supports, and loose/stored items. The attic floor insulation surface is not clean, flat, or uniform.
+
+<strong>13. Attic insulation age and history</strong>
+Attic insulation installation year stated: around 2007. Current year: 2026. Approximate age of attic insulation: about 19 years. The insulation was described as blown-in insulation. The insulation was described as having settled, shifted, been disturbed, or moved around over time. Initial visual impression was that the insulation may have dropped to almost half of what it used to be. Measurements: 6.5, 8, 9, 8.5, 6, 6, 7.5 inches; Average depth: about 7.4 inches. Exact original attic insulation R-value: N/A — it's fiberglass blown insulation. Material: Fiberglass (white fluffy balls); In the center of the attic/roof there are 2 off-ridge rectangular vents in the center of the home and then soffits around the sides and back. Plenum boxes and flex duct.
+
+<strong>14. Attic insulation material observations</strong>
+Loose-fill insulation appears white in the photos. The likely material discussed was blown fiberglass, but the exact material was not confirmed. There are visible areas of yellow fiberglass batt/roll insulation. Some batt/roll insulation appears displaced, folded, rolled, pushed aside, or unevenly placed. The blown-in insulation appears uneven and lumpy in areas. Some areas appear thinner than others. Some areas appear disturbed. Confirmed mold report: No. Confirmed pest contamination report: No. Confirmed moisture/wet insulation report: No; N/A.
+
+<strong>15. Blown-in insulation depth measurements</strong>
+Measurements taken with tape measure in multiple attic locations, pushed through blown-in insulation to the ceiling plane. Recorded depths: 6.5", 8", 9", 8.5", 6", 6", 7.5". Number of measurements: 7. Lowest: 6". Highest: 9". Average: ~7.4". The low areas around 6 inches are part of the measured data and are separate from the overall average.
+
+<strong>16. Insulation performance calculations discussed</strong>
+A rough working estimate discussed for 7.4 inches of likely blown fiberglass was approximately R-17 to R-22, depending on the exact product. The thinner 6-inch areas were discussed as likely having lower R-value than the average. R-38 was discussed as a practical minimum target range for a hot-climate attic. R-49 was discussed as a higher-end target. No exact product-specific R-value-per-inch was provided. No confirmed insulation coverage chart was provided. No exact installed-density information was provided.
+
+<strong>17. Ductwork information</strong>
+Ductwork runs through the attic, exposed to the attic environment. Inspected using an infrared thermal scanner. Most duct surface temperatures observed around 87°F at time of inspection. One small area showed a cooler temperature — around 78°F or 75°F — described as a possible tiny duct leak, barely tiny / minor. No major disconnected duct reported. No large duct opening reported. No collapsed duct specifically confirmed. No duct leakage percentage measured. No duct-blaster test provided. Stated plan: seal the small suspected leak with mastic.
+
+<strong>18. Return / supply temperature information</strong>
+A prior related HVAC measurement stated return air around 73°F and vent/supply air around 50°F — about a 23°F split. Another prior note stated vent air around 50°F to 51°F with outdoor conditions around 95°F to 100°F. Fresh return/supply data for the specific 71°F setpoint / 76°F indoor event: ~71–73°F return; ~50–54°F supply; Avg split ~20°F. No wet-bulb temperature provided. Indoor humidity: Avg; middle (the condensation PVC pipe next to the heat pump outside was constantly dripping water). No plenum temperatures provided. Refrigerant pressures: "Should be good, recently installed and runs fine besides the extreme heat we currently have." No subcooling/superheat, no static pressure. All vents located on the ceiling.
+
+<strong>19. Ceiling / room temperature context</strong>
+Ronin's bedroom ceiling averaging around 74°F. Aro's room ceiling/area around 87°F. Bathroom ceiling around 82°F to 86°F. Those were thermal/ceiling observations, not confirmed room air temperature readings. Baby monitor temperature readings: Aro: ~82°F, Ronin: ~73°F.
+
+<strong>20. Attic photo observations</strong>
+White loose-fill insulation across the attic floor. Yellow fiberglass batt/roll in some areas. OSB decking, wood trusses, ducts, wiring. Uneven insulation depth and distribution. Insulation around framing and ductwork. Cluttered/obstructed attic. Not a clean, uniformly level insulation blanket.
+
+<strong>21. Work considered or discussed</strong>
+Sealing the small suspected duct leak with mastic. Inspecting ductwork while in the attic. Adding insulation over existing. Avoiding a full attic cleanup. Condition for leaving old insulation: dry, not moldy, not pest-contaminated. Rollout fiberglass considered. Unfaced insulation for layering. Kraft/foil-faced not preferred when buried. Plywood as walking platform discussed — adds no meaningful insulation value and compresses insulation; raised walkway is the proper concept. Adding more blown-in over existing discussed.
+
+<strong>22. Material / cost context</strong>
+DIY rollout insulation cost discussed in rough terms. Majority-coverage estimate ~1,300–1,500 sq ft. R-30 and R-38 unfaced fiberglass common options. Lowe's military discount possibly ~10% for eligible items; may not apply to every item. Estimates only.
+
+<strong>23. Ventilation context</strong>
+Vented attic. Gable vents, roof vents, solar attic fans discussed theoretically. Current attic fan: No. Solar fan: No. Gable vent size/count: No. Ridge/roof vent data: 2. Soffit vent area: total sides and rear, partial front. No confirmed ventilation calculation. No confirmed baffle count. Blocked soffit condition: Possibly? Haven't checked.
+
+<strong>24. Extreme insulation-depth thought experiment</strong>
+Theoretical question about filling attic insulation to 50 or 60 inches — theoretical, not a plan. Diminishing returns discussed. Practical good-target depth: ~13 to 16 inches total, depending on product.
+
+<strong>25. Data not provided / additional facts</strong>
+House build year: 2007. Exact current insulation product not confirmed. Attic air temperature: ~140°F (could be wrong). Outdoor temp from weather station: ~90–94°F. Indoor humidity: avg/middle; condensate line constantly dripping. AC runtime: fan set to 'on'; system runs constantly on second stage. Thermostat location: entryway, 5.5 ft from floor. Filter: 24x18x1; MERV 5–8; clean; replaced 2026-06-24. Split for the event: ~71–73°F return / ~50–54°F supply / avg ~20°F. No refrigerant charge data, superheat/subcooling, static pressure, duct leakage rate, Manual D/J, blower door, or duct blaster results provided.
+
+<strong>26. Consolidated fact summary</strong>
+Jacksonville / north Florida. 07/01/2026, summer. Conditioned area 1,760 sq ft (builder schematic). Interior volume 15,100 cu ft. Rheem/Ruud 3-ton split heat pump (~2024). RP14AZ36AJ2NA / RH2TZ3617STANNJ. 36,000 BTU/hr, R-410A, 14.3 SEER2, scroll compressor. Two-stage capable, forced stage-2-only, high-cool airflow, ECM blower, ~1,200 CFM. Setpoint 71°F, reading ~76°F. Outdoor ~90–94°F. Attic insulation ~19 years old, blown fiberglass, settled/uneven, avg 7.4". Ducts in attic at ~87°F surface; one minor ~75–78°F cool spot to be mastic-sealed. Supply ~50–54°F, return ~71–73°F. Condensate line constantly dripping.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE IMAGE ================= -->
+<section class="wrap" id="image">
+  <div class="kicker reveal">02 · The Visual Input</div>
+  <h2 class="title reveal">The ceiling temperature map.</h2>
+  <p class="lede reveal" style="margin-bottom:34px">The single image attached to the prompt — a home floorplan annotated with approximate average ceiling temperatures for every zone. The pattern hidden inside it is the entire answer.</p>
+
+  <figure class="img-frame reveal" id="frame">
+    <img src="https://raw.githubusercontent.com/JRDN-R/fable5/refs/heads/main/2C712E8B-AFF8-4CC6-BFFB-05BAE163F1E9.png"
+         alt="Home floorplan with approximate average ceiling temperatures per zone" loading="lazy">
+    <figcaption class="img-caption">
+      <span>Home layout · approximate avg. ceiling temp per zone</span>
+      <span class="zoom">⤢ tap to expand</span>
+    </figcaption>
+  </figure>
+</section>
+
+<div class="lightbox" id="lightbox">
+  <img src="https://raw.githubusercontent.com/JRDN-R/fable5/refs/heads/main/2C712E8B-AFF8-4CC6-BFFB-05BAE163F1E9.png" alt="Expanded floorplan view">
+</div>
+
+<!-- ================= THE RESPONSE ================= -->
+<section class="wrap" id="response">
+  <div class="kicker reveal">03 · The Response — Fable 5 (Max)</div>
+  <h2 class="title reveal">Unedited. One shot.<br>Diagnosis, cause, and fix.</h2>
+  <p class="lede reveal" style="margin-bottom:48px">No follow-ups. No clarifying questions. The model reads the thermal pattern off the image, cross-checks it against the telemetry, clears the HVAC system, indicts the attic — and hands back a prioritized, ordered repair plan.</p>
+
+  <div class="resp-wrap reveal">
+    <div class="resp">
+
+      <h3 class="blur-reveal"><span class="num">!</span> The Issue</h3>
+      <p class="blur-reveal">Your AC can't hold setpoint (71°F set, 76°F actual), and the ceiling temperature map shows <strong>why in plain sight</strong>: the heat gain is not uniform. You have distinct hot zones — Master Bath / WIC / Aro's Bedroom running <span class="hl">+80°F at the ceiling</span>, and Master Bedroom / Dining at <span class="hl">~76°F</span> — while other rooms (Kitchen/Breakfast, Ronin's, rear Bedroom) sit comfortably at ~72°F.</p>
+      <p class="blur-reveal">If the HVAC system were the problem, the whole house would be uniformly warm. A patchy, zone-specific ceiling temperature pattern like this points <strong>up, at the attic</strong>, not at the equipment.</p>
+
+      <h3 class="blur-reveal"><span class="num">⚡</span> What's Causing It</h3>
+      <p class="blur-reveal"><strong>Primary cause: degraded attic insulation under a ~140°F attic.</strong></p>
+      <ul>
+        <li class="blur-reveal">Your insulation is 19 years old, settled/disturbed, averaging <span class="hl">~7.4 inches</span> of blown fiberglass ≈ <span class="hl">R-17 to R-19</span> — less than half the R-38 minimum recommended for a Florida attic.</li>
+        <li class="blur-reveal">Your thin spots (<strong>6 inches ≈ R-13–15</strong>) and displaced/rolled-back batts almost certainly sit directly above your red zones. That +80°F ceiling in Aro's room and the master bath is a 140°F attic radiating through an inadequate thermal barrier straight into the living space. That's also why Aro's room reads ~82°F while Ronin's reads ~73°F — same AC, different ceiling.</li>
+        <li class="blur-reveal">Every duct run in that 140°F attic is also absorbing heat before the air reaches the vents (87°F duct surfaces), shaving capacity off every supply run.</li>
+      </ul>
+      <p class="blur-reveal"><strong>Secondary/contributing factors:</strong></p>
+      <ul>
+        <li class="blur-reveal"><strong>Possibly blocked soffit vents</strong> (you noted "haven't checked") — restricted intake ventilation drives attic temps higher.</li>
+        <li class="blur-reveal">The <strong>small duct leak</strong> (75–78°F cool spot) — minor, but it's conditioned air dumping into the attic.</li>
+        <li class="blur-reveal"><strong>Setpoint expectation:</strong> 71°F on a 95°F+, 75–80% humidity day is beyond what almost any correctly sized residential system is designed to hold. Systems are sized to maintain ~75°F at design conditions. Some of your 5°F gap is envelope failure; a degree or two of it is physics.</li>
+      </ul>
+
+      <h3 class="blur-reveal"><span class="num">✓</span> What Is NOT the Problem</h3>
+      <p class="blur-reveal">Your HVAC is doing its job, and the data proves it:</p>
+      <div class="pill-grid">
+        <div class="pill reveal"><span class="ic">❄️</span><span><b>~20°F supply/return split</b> (71–73°F return, 50–54°F supply) — right in spec</span></div>
+        <div class="pill reveal"><span class="ic">💧</span><span><b>Condensate line constantly draining</b> — it's pulling humidity hard</span></div>
+        <div class="pill reveal"><span class="ic">📐</span><span><b>Correctly sized:</b> 3 tons for 1,760 sq ft (~587 sq ft/ton) is appropriate for Florida</span></div>
+        <div class="pill reveal"><span class="ic">🔧</span><span><b>2 years old, clean filter,</b> running full capacity</span></div>
+      </div>
+      <div class="callout warn reveal">
+        <span class="co-label">Don't get upsold</span>
+        <strong>Do not let anyone sell you a bigger system.</strong> The AC is winning a fight it shouldn't have to fight — it's cooling the house <em>and</em> the heat pouring through an R-17 ceiling.
+      </div>
+
+      <h3 class="blur-reveal"><span class="num">→</span> What To Do (In Order)</h3>
+      <ol>
+        <li class="blur-reveal"><strong>Air-seal the ceiling plane first.</strong> While the attic is accessible (before adding insulation), seal penetrations — wire holes, plumbing chases, top plates, around light fixtures/bath fans — with foam/caulk. Cheap, high impact, impossible after new insulation goes in.</li>
+        <li class="blur-reveal"><strong>Seal the duct leak with mastic</strong> (your existing plan — correct).</li>
+        <li class="blur-reveal"><strong>Verify soffit vents are open;</strong> install baffles at the eaves so new insulation doesn't block them.</li>
+        <li class="blur-reveal"><strong>Reposition the displaced batts</strong> flat and tight over the red zones (Master Bath, WIC, Aro's room). This is free and targets your worst areas immediately.</li>
+        <li class="blur-reveal"><strong>Top up the whole attic to R-38+ (~13–16" total depth).</strong> Either blown fiberglass over existing (easiest — rental blowers are often free with material purchase at Lowe's/Home Depot) or unfaced R-30 batts laid perpendicular over the existing blown-in. <strong>Prioritize the red-zone areas with extra depth.</strong> Your existing insulation is dry, mold-free, pest-free — it stays; you're just burying it under more.</li>
+        <li class="blur-reveal"><strong>After the insulation is fixed:</strong> re-enable stage 1 on the heat pump. Right now stage-2-only brute force is compensating for the envelope. Once the attic is fixed, stage 1 will handle most days with longer, quieter, more efficient runs and better dehumidification.</li>
+      </ol>
+
+      <h3 class="blur-reveal"><span class="num">★</span> Expected Result</h3>
+      <div class="callout good reveal">
+        <span class="co-label">The payoff</span>
+        With R-38+ overhead, the ceiling temperature map should flatten toward uniform ~72–74°F, Aro's room should match Ronin's, the system will cycle instead of running flat-out, and holding low-70s setpoints on hot days becomes realistic. This is roughly a <strong>$600–1,000 DIY fix</strong> solving what looks like a multi-thousand-dollar "AC problem."
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY IT MATTERS ================= -->
+<section class="wrap">
+  <div class="kicker reveal">04 · Why This Matters</div>
+  <h2 class="title reveal">This is what "max" looks like.</h2>
+  <div class="pill-grid" style="margin-top:30px">
+    <div class="pill reveal"><span class="ic">🖼️</span><span><b>Multimodal reasoning.</b> Read spatial temperature patterns off an image and mapped them to specific insulation defects.</span></div>
+    <div class="pill reveal"><span class="ic">🧮</span><span><b>Grounded in the numbers.</b> Every claim traces back to a measurement in the context — nothing invented.</span></div>
+    <div class="pill reveal"><span class="ic">🛡️</span><span><b>Protected the user.</b> Explicitly warned against an unnecessary, expensive system upsell.</span></div>
+    <div class="pill reveal"><span class="ic">📋</span><span><b>Actionable ordering.</b> Not just a diagnosis — a sequenced plan where step order actually matters.</span></div>
+    <div class="pill reveal"><span class="ic">⚖️</span><span><b>Honest physics.</b> Acknowledged part of the gap is expectation vs. design conditions — no over-promising.</span></div>
+    <div class="pill reveal"><span class="ic">💵</span><span><b>Real economics.</b> Framed the fix at $600–1,000 DIY vs. a multi-thousand-dollar misdiagnosis.</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mark">Fable 5 by Claude</div>
+    <p>Capability showcase · One prompt, one image, one shot · Response shown unedited</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- scroll progress ---------- */
+const prog = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const p = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  prog.style.width = p + '%';
+}, {passive:true});
+
+/* ---------- word-split for blur reveal (Grok-style) ---------- */
+document.querySelectorAll('.blur-reveal').forEach(el => {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  const textNodes = [];
+  while (walker.nextNode()) {
+    if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
+  }
+  textNodes.forEach(node => {
+    const frag = document.createDocumentFragment();
+    node.textContent.split(/(\s+)/).forEach(part => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+      const s = document.createElement('span');
+      s.className = 'w';
+      s.textContent = part;
+      frag.appendChild(s);
+    });
+    node.parentNode.replaceChild(frag, node);
+  });
+  // stagger delays per word within the element
+  el.querySelectorAll('.w').forEach((w, i) => {
+    w.style.setProperty('--d', Math.min(i * 0.028, 1.6) + 's');
+  });
+});
+
+/* ---------- intersection observer reveals ---------- */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.12, rootMargin: '0px 0px -6% 0px'});
+
+document.querySelectorAll('.reveal, .blur-reveal').forEach(el => io.observe(el));
+
+/* ---------- lightbox ---------- */
+const lb = document.getElementById('lightbox');
+document.getElementById('frame').addEventListener('click', () => lb.classList.add('open'));
+lb.addEventListener('click', () => lb.classList.remove('open'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+
+/* ---------- subtle parallax on orbs ---------- */
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const y = scrollY;
+    document.querySelector('.orb-1').style.translate = `0 ${y * 0.06}px`;
+    document.querySelector('.orb-2').style.translate = `0 ${y * -0.04}px`;
+    ticking = false;
+  });
+}, {passive:true});
+</script>
+</body>
+</html>
